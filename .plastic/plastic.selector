@@ -1,0 +1,4 @@
+repository "SnapSync@dev_ANtoni@cloud"
+  path "/"
+    br "/main"
+    co "/main"
