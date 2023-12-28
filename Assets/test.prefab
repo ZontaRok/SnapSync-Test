@@ -9,13 +9,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5493216870123473534}
+  - component: {fileID: 8709827601840516396}
+  - component: {fileID: 2768289796070456689}
   m_Layer: 0
   m_Name: test
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5493216870123473534
 Transform:
   m_ObjectHideFlags: 0
@@ -31,3 +33,43 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8709827601840516396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6996737390784589044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a572314181298864f89931ad7ce8143f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loginP: {fileID: 0}
+  singinP: {fileID: 0}
+  profP: {fileID: 0}
+  loginEmail: {fileID: 0}
+  loginPassword: {fileID: 0}
+  singupEmail: {fileID: 0}
+  singupPassword: {fileID: 0}
+  singupUserName: {fileID: 0}
+--- !u!114 &2768289796070456689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6996737390784589044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a572314181298864f89931ad7ce8143f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loginP: {fileID: 0}
+  singinP: {fileID: 0}
+  profP: {fileID: 0}
+  loginEmail: {fileID: 0}
+  loginPassword: {fileID: 0}
+  singupEmail: {fileID: 0}
+  singupPassword: {fileID: 0}
+  singupUserName: {fileID: 0}

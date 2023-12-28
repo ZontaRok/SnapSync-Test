@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: a572314181298864f89931ad7ce8143f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - loginP: {instanceID: 0}
+  - singinP: {instanceID: 0}
+  - profP: {instanceID: 0}
+  - loginEmail: {instanceID: 0}
+  - loginPassword: {instanceID: 0}
+  - singupEmail: {instanceID: 0}
+  - singupPassword: {instanceID: 0}
+  - singupUserName: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
