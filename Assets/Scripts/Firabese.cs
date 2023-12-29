@@ -3,6 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI; // Import the UnityEngine.UI namespace
+using Firebase;
+using Firebase.Auth;
+using Firebase.Extensions;
+using System;
+using System.Threading.Tasks;
 
 public class Firabese : MonoBehaviour
 {
@@ -13,6 +18,32 @@ public class Firabese : MonoBehaviour
     public Text napaka_Naslov_text, napaka_Sporocilo_text,uporabnik_ime_text,uporabnik_email_text;
 
     public Toggle zapomni;
+
+    Firebase.Auth.FirebaseAuth auth;
+    Firebase.Auth.FirebaseUser user;
+
+    bool isSingIn = false;
+
+    void Start()
+    {
+        Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task => {
+            var dependencyStatus = task.Result;
+            if (dependencyStatus == Firebase.DependencyStatus.Available)
+            {
+                // Create and hold a reference to your FirebaseApp,
+                // where app is a Firebase.FirebaseApp property of your application class.
+                InitializeFirebase();
+
+                // Set a flag here to indicate whether Firebase is ready to use by your app.
+            }
+            else
+            {
+                UnityEngine.Debug.LogError(System.String.Format(
+                  "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
+                // Firebase Unity SDK is not safe to use here.
+            }
+        });
+    }
 
     public void OpenloginP()
     {
@@ -50,20 +81,22 @@ public class Firabese : MonoBehaviour
     {
         if (string.IsNullOrEmpty(loginEmail.text) && string.IsNullOrEmpty(loginPassword.text) && string.IsNullOrEmpty(singupUserName.text))
         {
-            PrikazNapake("Error", "porapvi polja");
+            PrikazNotifikacij("Error", "porapvi polje");
             return;
         }
   
+        SignInUser(loginEmail.text, loginPassword.text);
     }
 
     public void SingUpUser()
     {
         if (string.IsNullOrEmpty(singupEmail.text) && string.IsNullOrEmpty(singupPassword.text) && string.IsNullOrEmpty(singupCPassword.text) && string.IsNullOrEmpty(singupUserName.text))
         {
-            PrikazNapake("Error", "porapvi polja");
+            PrikazNotifikacij("Error", "porapvi polja");
             return;
         }
 
+        CreateUser(singupEmail.text, singupPassword.text, singupUserName.text);
 
         
     }
@@ -71,14 +104,14 @@ public class Firabese : MonoBehaviour
     {
         if(string.IsNullOrEmpty(forgotPassEmail.text))
         {
-            PrikazNapake("Error", "prazni email polje");
+            PrikazNotifikacij   ("Error", "prazni email polje");
 
 
             return;
         }
     }
 
-    private void PrikazNapake(string title, string msg)
+    private void PrikazNotifikacij(string title, string msg)
     {
         napaka_Naslov_text.text = "" + title;
         napaka_Sporocilo_text.text ="" + msg;
@@ -96,9 +129,139 @@ public class Firabese : MonoBehaviour
     }
     public void LogOut()
     {
+
+        auth.SignOut();
         profP.SetActive(false);
         uporabnik_email_text.text = "";
         uporabnik_ime_text.text = "";
+
+
         OpenloginP();
+    }
+
+
+    void CreateUser(string email, string password, string UserName)
+    {
+        auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task => {
+            if (task.IsCanceled)
+            {
+                Debug.LogError("CreateUserWithEmailAndPasswordAsync was canceled.");
+                return;
+            }
+            if (task.IsFaulted)
+            {
+                Debug.LogError("CreateUserWithEmailAndPasswordAsync encountered an error: " + task.Exception);
+                return;
+            }
+
+            // Firebase user has been created.
+            Firebase.Auth.AuthResult result = task.Result;
+            Debug.LogFormat("Firebase user created successfully: {0} ({1})",
+                result.User.DisplayName, result.User.UserId);
+
+            UpdateUserProfile(UserName);
+        });
+    }
+
+    public void SignInUser(string email, string password )
+    {
+        auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread  (task => {
+            if (task.IsCanceled)
+            {
+                Debug.LogError("SignInWithEmailAndPasswordAsync was canceled.");
+                return;
+            }
+            if (task.IsFaulted)
+            {
+                Debug.LogError("SignInWithEmailAndPasswordAsync encountered an error: " + task.Exception);
+                return;
+            }
+
+            Firebase.Auth.AuthResult result = task.Result;
+            Debug.LogFormat("User signed in successfully: {0} ({1})",
+                result.User.DisplayName, result.User.UserId);
+
+            uporabnik_ime_text.text = "" + result.User.DisplayName;
+            uporabnik_email_text.text = "" + result.User.Email;
+            OpenprofP();
+        });
+    }
+
+    void InitializeFirebase()
+    {
+        auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
+        auth.StateChanged += AuthStateChanged;
+        AuthStateChanged(this, null);
+    }
+
+    void AuthStateChanged(object sender, System.EventArgs eventArgs)
+    {
+        if (auth.CurrentUser != user)
+        {
+            bool signedIn = user != auth.CurrentUser && auth.CurrentUser != null
+                && auth.CurrentUser.IsValid();
+            if (!signedIn && user != null)
+            {
+                Debug.Log("Signed out " + user.UserId);
+            }
+            user = auth.CurrentUser;
+            if (signedIn)
+            {
+                Debug.Log("Signed in " + user.UserId);
+                isSingIn = true;
+            }
+        }
+    }
+
+    void OnDestroy()
+    {
+        auth.StateChanged -= AuthStateChanged;
+        auth = null;
+    }
+
+    void UpdateUserProfile(string UserName)
+    {
+
+        Firebase.Auth.FirebaseUser user = auth.CurrentUser;
+        if (user != null)
+        {
+            Firebase.Auth.UserProfile profile = new Firebase.Auth.UserProfile
+            {
+                DisplayName = UserName,
+                PhotoUrl = new System.Uri("https://placehold.jp/150x150.png"),
+            };
+            user.UpdateUserProfileAsync(profile).ContinueWith(task => {
+                if (task.IsCanceled)
+                {
+                    Debug.LogError("UpdateUserProfileAsync was canceled.");
+                    return;
+                }
+                if (task.IsFaulted)
+                {
+                    Debug.LogError("UpdateUserProfileAsync encountered an error: " + task.Exception);
+                    return;
+                }
+
+                Debug.Log("User profile updated successfully.");
+
+                PrikazNotifikacij("Alert", "Accunt Successfully Created");
+            });
+        }
+    }
+
+    bool isSinged = false;
+
+    void Update()
+    {
+        if (isSingIn)
+        {
+            if (isSinged)
+            {
+                isSinged = true;
+                uporabnik_ime_text.text = "" + user.DisplayName;
+                uporabnik_email_text.text = "" + user.Email;
+                OpenprofP();
+            }
+        }
     }
 }

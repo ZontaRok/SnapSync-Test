@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "662165902387",
+    "project_id": "unitypovezava",
+    "storage_bucket": "unitypovezava.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:662165902387:android:a11f1fbcf1ffd359cdff46",
+        "android_client_info": {
+          "package_name": "SnapSync.com.test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJxiOFFouxAsRjv7pgQcbwc-hslPom2Rs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
