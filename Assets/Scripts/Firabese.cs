@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI; // Import the UnityEngine.UI namespace
+using UnityEngine.UI;
 using Firebase;
 using Firebase.Auth;
 using Firebase.Extensions;
@@ -30,11 +30,9 @@ public class Firabese : MonoBehaviour
             var dependencyStatus = task.Result;
             if (dependencyStatus == Firebase.DependencyStatus.Available)
             {
-                // Create and hold a reference to your FirebaseApp,
-                // where app is a Firebase.FirebaseApp property of your application class.
+
                 InitializeFirebase();
 
-                // Set a flag here to indicate whether Firebase is ready to use by your app.
             }
             else
             {
@@ -104,11 +102,13 @@ public class Firabese : MonoBehaviour
     {
         if(string.IsNullOrEmpty(forgotPassEmail.text))
         {
-            PrikazNotifikacij   ("Error", "prazni email polje");
+            PrikazNotifikacij("Error", "prazni email polje");
 
 
             return;
         }
+
+        ForgetPasswordSubmit(forgotPassEmail.text);
     }
 
     private void PrikazNotifikacij(string title, string msg)
@@ -151,10 +151,19 @@ public class Firabese : MonoBehaviour
             if (task.IsFaulted)
             {
                 Debug.LogError("CreateUserWithEmailAndPasswordAsync encountered an error: " + task.Exception);
+
+                foreach (Exception exception in task.Exception.Flatten().InnerExceptions)
+                {
+                    Firebase.FirebaseException firebaseEx = exception as Firebase.FirebaseException;
+                    if (firebaseEx != null)
+                    {
+                        var errorCode = (AuthError)firebaseEx.ErrorCode;
+                        PrikazNotifikacij("Error", GetErrorMessage(errorCode));
+                    }
+                }
                 return;
             }
 
-            // Firebase user has been created.
             Firebase.Auth.AuthResult result = task.Result;
             Debug.LogFormat("Firebase user created successfully: {0} ({1})",
                 result.User.DisplayName, result.User.UserId);
@@ -174,6 +183,17 @@ public class Firabese : MonoBehaviour
             if (task.IsFaulted)
             {
                 Debug.LogError("SignInWithEmailAndPasswordAsync encountered an error: " + task.Exception);
+
+                foreach (Exception exception in task.Exception.Flatten().InnerExceptions)
+                {
+                    Firebase.FirebaseException firebaseEx = exception as Firebase.FirebaseException;
+                    if (firebaseEx != null)
+                    {
+                        var errorCode = (AuthError)firebaseEx.ErrorCode;
+                        PrikazNotifikacij("Error", GetErrorMessage(errorCode));
+                    }
+                }
+
                 return;
             }
 
@@ -264,4 +284,67 @@ public class Firabese : MonoBehaviour
             }
         }
     }
+
+    private static string GetErrorMessage(AuthError errorCode)
+    {
+        var message = "";
+        switch (errorCode)
+        {
+            case AuthError.AccountExistsWithDifferentCredentials:
+                message = "The account already exists with different credentials";
+                break;
+            case AuthError.MissingPassword:
+                message = "Password is needed";
+                break;
+            case AuthError.WeakPassword:
+                message = "The password is weak";
+                break;
+            case AuthError.WrongPassword:
+                message = "Geslo ni pravilno";
+                break;
+            case AuthError.EmailAlreadyInUse:
+                message = "The account with that email already exists";
+                break;
+            case AuthError.InvalidEmail:
+                message = "invalid email";
+                break;
+            case AuthError.MissingEmail:
+                message = "Email is needed";
+                break;
+            default:
+                message = "An error occurred";
+                break;
+        }
+        return message;
+    }
+
+   void ForgetPasswordSubmit(string forgotPassEmail)
+    {
+        auth.SendPasswordResetEmailAsync(forgotPassEmail).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.LogError("SendPasswordResetEmailAsync was canceled");
+            }
+
+            if (task.IsFaulted)
+            {
+                foreach (Exception exception in task.Exception.Flatten().InnerExceptions)
+                {
+                    Firebase.FirebaseException firebaseEx = exception as Firebase.FirebaseException;
+                    if (firebaseEx != null)
+                    {
+                        var errorCode = (AuthError)firebaseEx.ErrorCode;
+                        PrikazNotifikacij("Error", GetErrorMessage(errorCode));
+                    }
+                }
+
+                PrikazNotifikacij("Alert", "Successfully Send Email For Reset Password");
+
+            }
+
+        });
+
+    }
+
 }
