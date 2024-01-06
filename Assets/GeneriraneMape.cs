@@ -5,73 +5,64 @@ using System.IO;
 
 public class GeneriraneMape : MonoBehaviour
 {
-    public List<float> noteDurations = new List<float>();
+    public GameObject linePrefab; // Reference to a GameObject prefab that will serve as a vertical line
+    public Transform lineParent; // Parent transform to hold the lines
 
-    // Prefab with a UI Image component to act as a line
-    public GameObject linePrefab;
+    private List<float> dataPoints = new List<float>();
 
-    public RectTransform canvasTransform; // Drag your Canvas RectTransform here
-
-    public string midiFilePath = "MIDIdata.txt";
-
-    void Start()
+    private void Start()
     {
-        LoadMidiData();
-        GenerateLinesOnCanvas();
+        LoadDataFromFile("Assets/pitch_data_lyrics_Song.txt");
+
+        StartCoroutine(DrawLines());
     }
 
-    void LoadMidiData()
+    void LoadDataFromFile(string filePath)
     {
-        string[] lines = File.ReadAllLines(Path.Combine(Application.dataPath, midiFilePath));
+        string[] lines = File.ReadAllLines(filePath); // Read all lines from the file
+
+        if (lines.Length == 0)
+        {
+            Debug.LogError("No data found in the file!");
+            return;
+        }
 
         foreach (string line in lines)
         {
-            string[] values = line.Split(',');
+            string[] dataStrings = line.Split(','); // Split each line by commas to get individual data points
 
-            foreach (string value in values)
+            foreach (string dataString in dataStrings)
             {
-                if (float.TryParse(value.Trim(), out float duration))
+                if (float.TryParse(dataString, out float dataPoint))
                 {
-                    noteDurations.Add(duration);
+                    dataPoints.Add(dataPoint);
                 }
                 else
                 {
-                    Debug.LogWarning("Failed to parse value: " + value);
+                    Debug.LogError("Failed to parse a data point: " + dataString);
                 }
             }
         }
     }
 
-    void GenerateLinesOnCanvas()
+    IEnumerator DrawLines()
     {
-        float maxY = Mathf.Max(noteDurations.ToArray());
-        float minY = Mathf.Min(noteDurations.ToArray());
-
-        float canvasHeight = Mathf.Abs(maxY - minY);
-        canvasTransform.sizeDelta = new Vector2(canvasTransform.sizeDelta.x, canvasHeight);
-
-        Vector3 startPosition = Vector3.zero;
-
-        foreach (float duration in noteDurations)
+        for (int i = 0; i < dataPoints.Count; i++)
         {
-            GameObject lineInstance = Instantiate(linePrefab, canvasTransform);
+            // Calculate the y position based on data point and game area
+            float yPos = 56 + (dataPoints[i] - 50); // Adjust as necessary based on your requirements
 
-            // Check if RectTransform exists on the instantiated prefab
-            RectTransform lineRectTransform = lineInstance.GetComponent<RectTransform>();
-            if (lineRectTransform == null)
+            // Instantiate a new vertical line prefab
+            GameObject lineInstance = Instantiate(linePrefab, new Vector3(i, yPos, 0), Quaternion.identity);
+
+            // Set the parent of the instantiated line to lineParent (if you want to organize them under a parent GameObject)
+            if (lineParent != null)
             {
-                Debug.LogError("RectTransform not found on LinePrefab! Please attach a RectTransform to the LinePrefab.");
-                return;
+                lineInstance.transform.SetParent(lineParent);
             }
 
-            // Set line width based on duration (adjust this as needed)
-            lineRectTransform.sizeDelta = new Vector2(duration, 2f);
-
-            // Set line position
-            lineRectTransform.localPosition = startPosition + new Vector3(duration / 2, 0, 0);
-
-            // Move the starting position for the next line
-            startPosition = lineRectTransform.localPosition + new Vector3(duration / 2, 0, 0);
+            // Wait for 1 second before drawing the next line
+            yield return new WaitForSeconds(1.0f);
         }
     }
 }
