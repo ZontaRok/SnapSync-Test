@@ -4,15 +4,18 @@ using UnityEngine.EventSystems;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 
 public class PlaySong : MonoBehaviour
 {
     public GameObject MusicBox;
-    public AudioSource audioSource;
+    public AudioSource audioSource; 
 
     public string localFilePath = "Assets/DownloadedFiles/file.mp3";
     public string fileURL = "https://storage.googleapis.com/karaoke-cfa02.appspot.com/80s/a-ha%20-%20Take%20On%20Me%20(Lyrics).mp3";
+
+    private string SongName;
 
 
     private void Start()
@@ -27,14 +30,32 @@ public class PlaySong : MonoBehaviour
         }
     }
 
+
     public void OnClickButton()
     {
+
         Transform musicBoxTransform = MusicBox.transform;
 
         Transform[] allChildren = musicBoxTransform.GetComponentsInChildren<Transform>(true);
 
         if (allChildren.Length > 0)
         {
+            Transform TextChild = allChildren[4];
+
+            Text textComponentForName = TextChild.GetComponent<Text>();
+
+            if (textComponentForName != null)
+            {
+                string Name = textComponentForName.text;
+                Debug.Log(Name);
+
+                SongName = Name;
+            }
+            else
+            {
+                Debug.Log("The last child Transform does not have a Text component.");
+            }
+
             // Get the last child Transfor
             Transform lastChild = allChildren[allChildren.Length - 1];
 
@@ -47,7 +68,7 @@ public class PlaySong : MonoBehaviour
                 string textValue = textComponent.text;
                 Debug.Log(textValue);
                 //StartCoroutine(CretaFile(textValue));
-                StartCoroutine(PlayAudioFromURL(fileURL));
+                //StartCoroutine(PlayAudioFromURL(fileURL));
                 //StartCoroutine(LoadAudioClip());
             }
             else
@@ -59,6 +80,20 @@ public class PlaySong : MonoBehaviour
         {
             Debug.Log("There are no child Transforms in the array.");
         }
+
+        // Find the UIManager in the scene.
+        ChangeScene uiManager = FindObjectOfType<ChangeScene>();
+
+        // Check if UIManager is found.
+        if (uiManager != null)
+        {
+            uiManager.NavigateToPlayGame(SongName);
+        }
+        else
+        {
+            Debug.LogWarning("UIManager not found in the scene.");
+        }
+
     }
 
 

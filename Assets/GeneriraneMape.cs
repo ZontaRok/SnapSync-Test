@@ -5,64 +5,80 @@ using System.IO;
 
 public class GeneriraneMape : MonoBehaviour
 {
-    public GameObject linePrefab; // Reference to a GameObject prefab that will serve as a vertical line
-    public Transform lineParent; // Parent transform to hold the lines
+    public string filePath = "Assets/pitch_data_lyrics_Song.txt";
+    public float minY = 56.0f;
+    public float maxY = 106.0f;
+    public float CanvesScaleer = 0.5f;
+    public float lineWidth = 10.0f;
+    public float lineLength = 100.0f;
 
-    private List<float> dataPoints = new List<float>();
+    public GameObject linePrefab;
+    public RectTransform canvasRect;
 
-    private void Start()
+    void Start()
     {
-        LoadDataFromFile("Assets/pitch_data_lyrics_Song.txt");
+        List<float> heights = ReadHeightsFromFile(filePath);
 
-        StartCoroutine(DrawLines());
-    }
+        // Initialize the starting X position to the rightmost position of the Canvas
+        float currentXPosition = canvasRect.rect.width;
 
-    void LoadDataFromFile(string filePath)
-    {
-        string[] lines = File.ReadAllLines(filePath); // Read all lines from the file
-
-        if (lines.Length == 0)
+        foreach (float height in heights)
         {
-            Debug.LogError("No data found in the file!");
-            return;
-        }
-
-        foreach (string line in lines)
-        {
-            string[] dataStrings = line.Split(','); // Split each line by commas to get individual data points
-
-            foreach (string dataString in dataStrings)
+            if (height >= minY && height <= maxY)
             {
-                if (float.TryParse(dataString, out float dataPoint))
-                {
-                    dataPoints.Add(dataPoint);
-                }
-                else
-                {
-                    Debug.LogError("Failed to parse a data point: " + dataString);
-                }
+                DrawLine(new Vector2(currentXPosition, height));
             }
+            // Move to the left for the next line
+            currentXPosition -= lineLength;
         }
     }
 
-    IEnumerator DrawLines()
+    List<float> ReadHeightsFromFile(string path)
     {
-        for (int i = 0; i < dataPoints.Count; i++)
+        List<float> heights = new List<float>();
+
+        if (File.Exists(path))
         {
-            // Calculate the y position based on data point and game area
-            float yPos = 56 + (dataPoints[i] - 50); // Adjust as necessary based on your requirements
-
-            // Instantiate a new vertical line prefab
-            GameObject lineInstance = Instantiate(linePrefab, new Vector3(i, yPos, 0), Quaternion.identity);
-
-            // Set the parent of the instantiated line to lineParent (if you want to organize them under a parent GameObject)
-            if (lineParent != null)
+            string[] lines = File.ReadAllLines(path);
+            foreach (string line in lines)
             {
-                lineInstance.transform.SetParent(lineParent);
+                string[] values = line.Split(',');
+                foreach (string value in values)
+                {
+                    float height;
+                    if (float.TryParse(value, out height))
+                    {
+                        heights.Add(height);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Failed to parse height value: " + value);
+                    }
+                }
             }
+        }
+        else
+        {
+            Debug.LogError("File not found at path: " + path);
+        }
 
-            // Wait for 1 second before drawing the next line
-            yield return new WaitForSeconds(1.0f);
+        return heights;
+    }
+
+    void DrawLine(Vector2 position)
+    {
+        GameObject line = Instantiate(linePrefab, canvasRect);
+        line.GetComponent<RectTransform>().anchoredPosition = position;
+
+        // Ensure the line is within the Canvas height boundaries
+        if (position.y < canvasRect.rect.height && position.y > 0)
+        {
+            line.GetComponent<RectTransform>().sizeDelta = new Vector2(lineLength, 2); // 2 is the thickness, adjust as needed
+        }
+        else
+        {
+            // Optionally, you can adjust or ignore lines that are outside the Canvas height boundaries
+            Destroy(line);
         }
     }
 }
