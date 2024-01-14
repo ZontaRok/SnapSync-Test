@@ -221,6 +221,7 @@ GameObject:
   - component: {fileID: 6735058923470785409}
   - component: {fileID: 7901401599710309319}
   - component: {fileID: 8977462354838024530}
+  - component: {fileID: 2594001078409265161}
   m_Layer: 0
   m_Name: SelectSongButton
   m_TagString: Untagged
@@ -343,6 +344,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 4895625493897572775}
+        m_TargetAssemblyTypeName: PlaySong, Assembly-CSharp
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &8977462354838024530
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -359,6 +372,19 @@ MonoBehaviour:
   audioSource: {fileID: 6262905499853199868}
   localFilePath: Assets/DownloadedFiles/file.mp3
   fileURL: https://storage.googleapis.com/karaoke-cfa02.appspot.com/80s/a-ha%20-%20Take%20On%20Me%20(Lyrics).mp3
+--- !u!114 &2594001078409265161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4895625493897572775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d386dbed7578114984833f38177642c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MusicBox: {fileID: 4296327671083385066}
 --- !u!1 &6492998923073899999
 GameObject:
   m_ObjectHideFlags: 0
