@@ -2631,7 +2631,76 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: '[00:34.85]Talking away
+
+    [00:37.60]I don''t know what I''m to say
+
+    [00:40.60]I''ll
+    say it anyway
+
+    [00:43.35]Today is another day to find you
+
+    [00:46.10]Shying
+    away
+
+    [00:49.49]I''ll be coming for your love. OK?
+
+    [00:51.75]Take
+    on me (take on me)
+
+    [00:57.50]Take me on (take on me)
+
+    [01:03.00]I''ll
+    be gone
+
+    [01:07.25]In a day or two
+
+    [01:14.66]So needless to say
+
+    [01:16.91]Of
+    odds and ends
+
+    [01:20.16]But I''ll be stumbling away
+
+    [01:22.91]Slowly
+    learning that life is OK.
+
+    [01:25.66]Say after me,
+
+    [01:28.41]"It''s
+    no better to be safe than sorry."
+
+    [01:31.41]Take on me (take on me)
+
+    [01:36.91]Take
+    me on (take on me)
+
+    [01:42.56]I''ll be gone
+
+    [01:46.81]In a day or
+    two
+
+    [02:33.45]Oh, things that you say. Yeah.
+
+    [02:36.36]Is it life
+    or just to play my worries away?
+
+    [02:39.11]You''re all the things I''ve
+    got to remember
+
+    [02:43.11]You''re shying away
+
+    [02:47.50]I''ll be
+    coming for you anyway
+
+    [02:50.51]Take on me (take on me)
+
+    [02:56.01]Take
+    me on (take on me)
+
+    [03:02.00]I''ll be gone
+
+    [03:07.17]In a day'
 --- !u!222 &500606425
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3443,9 +3512,10 @@ MonoBehaviour:
   linePrefab: {fileID: 807622211965538699, guid: 792830455e8132142a667be86316baea, type: 3}
   canvasRect: {fileID: 613574593}
   LineSpacing: 100
-  LyricsData: {fileID: 985547390}
-  MIDIdata: {fileID: 1854437012}
   BPMSpeed: {fileID: 619026348}
+  MIDIdata: {fileID: 2082487573}
+  Lyricsdata: {fileID: 500606424}
+  SongLength: 225
 --- !u!114 &613574599
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3534,7 +3604,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 120
 --- !u!222 &619026349
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8112,7 +8182,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1519802511
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9022,7 +9092,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1812477110
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9076,7 +9146,7 @@ GameObject:
   - component: {fileID: 1833399101}
   - component: {fileID: 1833399100}
   m_Layer: 0
-  m_Name: Score
+  m_Name: ScoreText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10173,7 +10243,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: "86.163055,86.19176,86.10849,74.3111,73.82686\r\n72.70929,61.206882,61.109573,61.014782,61.653877\r\n63.811718,62.01146,98.0912,62.6452,63.29925\r\n73.09424,73.51989,74.03595,73.77294,73.37276\r\n105.27289,105.41583,61.63368,58.979954,106.33977\r\n70.15024,72.79978,73.1987,56.02026,56.627388\r\n53.538147,106.10891,98.67923,63.19496,64.32811\r\n68.84967,68.82521,57.5106,57.391907,68.78598\r\n79.3116,79.2239,79.12912,79.10287,78.92467\r\n87.91038,87.88609,67.577385,53.033806,54.75532\r\n63.32033,61.911804,59.171143,61.891205,62.872925\r\n80.06216,80.21056,80.20164,80.060715,79.81972\r\n73.68065,73.577484,62.070145,60.24336,60.176605\r\n73.53525,73.41433,73.33009,73.201065,73.49687\r\n72.11073,72.81668,72.935776,72.65671,72.71446\r\n64.2369,63.88069,52.861713,64.27945,61.46616\r\n74.88753,73.42526,72.86752,73.68436,72.25423\r\n63.880898,64.27577,63.83994,64.151184,63.713665\r\n64.828674,64.93547,53.57196,52.794014,78.33089\r\n81.81386,88.58516,88.47457,81.4842,89.220314\r\n88.07025,88.03369,87.93416,79.03054,77.87267\r\n74.90019,75.83722,76.048584,75.66273,75.62519\r\n76.31648,76.14023,76.02501,76.16778,76.355255\r\n58.01602,58.67173,60.126846,71.803925,72.924545\r\n67.846504,67.98912,68.79373,68.0454,65.60236\r\n57.688828,54.40408,52.347054,67.91225,67.91858\r\n64.501396,64.35308,66.81901,52.449333,52.846886\r\n63.592976,63.935028,63.78012,63.722008,62.249245\r\n87.976074,87.928925,87.93811,87.900055,87.76293\r"
 --- !u!222 &2082487574
 CanvasRenderer:
   m_ObjectHideFlags: 0

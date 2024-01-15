@@ -3,21 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Text.RegularExpressions;
 
 public class testGenerate : MonoBehaviour
 {
     public GameObject linePrefab;
     public RectTransform canvasRect;
     public float LineSpacing = 0f;
-    public Text LyricsData;
-    public Text MIDIdata;
     public Text BPMSpeed;
-
+    public Text MIDIdata;
+    public Text Lyricsdata;
+    public float SongLength;
     private float moveSpeed;
-    private float songDuration = 227.85f;
-    private List<float> lyricsTimestamps = new List<float>();
-    private List<List<float>> midiData = new List<List<float>>();
 
+    private List<List<float>> midiData = new List<List<float>>();
+    private List<string> lyricsData = new List<string>();
     private List<GameObject> spawnedLines = new List<GameObject>();
     private float space = 0f;
 
@@ -25,41 +25,15 @@ public class testGenerate : MonoBehaviour
     {
         moveSpeed = float.Parse(BPMSpeed.text);
 
-        LoadLyricsTimestamps();
         LoadMidiData();
+        ParseLyricsData();
+
         SpawnAllLines();
 
         StartCoroutine(AnimateLines());
     }
 
-    void LoadLyricsTimestamps()
-    {
-        if (LyricsData != null)
-        {
-            string[] lines = LyricsData.text.Split('\n');
-            foreach (string line in lines)
-            {
-                // Extract the timestamp from the line
-                string timestampStr = line.Substring(1, 8);
-                if (TimeSpan.TryParseExact(timestampStr, "mm':'ss'.'ff", null, out TimeSpan timestamp))
-                {
-                    float timestampInSeconds = (float)timestamp.TotalSeconds;
-                    lyricsTimestamps.Add(timestampInSeconds);
-                }
-                else
-                {
-                    Debug.LogError("Failed to parse timestamp: " + timestampStr);
-                }
-            }
-
-            Debug.Log("Loaded " + lyricsTimestamps.Count + " lyrics timestamps.");
-        }
-        else
-        {
-            Debug.LogError("LyricsData is null.");
-        }
-    }
-
+    //Midi
     void LoadMidiData()
     {
         if (MIDIdata != null)
@@ -75,50 +49,74 @@ public class testGenerate : MonoBehaviour
                     {
                         data.Add(floatValue);
                     }
-                    else
-                    {
-                        Debug.LogError("Failed to parse MIDI value: " + value);
-                    }
                 }
                 midiData.Add(data);
             }
-
-            Debug.Log("Loaded " + midiData.Count + " sets of MIDI data.");
-        }
-        else
-        {
-            Debug.LogError("MIDIdata is null.");
         }
     }
 
+    void ParseLyricsData()
+    {
+        if(Lyricsdata != null)
+        {
+            List<string> timestamps = ExtractTimestamps(Lyricsdata.text);
+
+            for (int i = 0; i < timestamps.Count - 1; i++)
+            {
+                float duration = CalculateDuration(timestamps[i], timestamps[i + 1]);
+                Debug.Log($"{timestamps[i]}, {duration:F2}, {timestamps[i + 1]}");
+            }
+
+            lyricsData = timestamps;
+        }
+    }
+
+    List<string> ExtractTimestamps(string lyrics)
+    {
+        List<string> timestamps = new List<string>();
+        string pattern = @"\[\d{2}:\d{2}\.\d{2}\]";
+        MatchCollection matches = Regex.Matches(lyrics, pattern);
+
+        foreach (Match match in matches)
+        {
+            timestamps.Add(match.Value);
+        }
+
+        return timestamps;
+    }
+
+    float CalculateDuration(string timestamp1, string timestamp2)
+    {
+        TimeSpan time1 = ExtractTimeSpan(timestamp1);
+        TimeSpan time2 = ExtractTimeSpan(timestamp2);
+        float duration = (float)(time2.TotalSeconds - time1.TotalSeconds);
+        return duration;
+    }
+
+    TimeSpan ExtractTimeSpan(string timestamp)
+    {
+        string[] parts = timestamp.Trim('[', ']').Split(':');
+        int minutes = int.Parse(parts[0]);
+        float seconds = float.Parse(parts[1]);
+        return new TimeSpan(0, 0, minutes, (int)seconds, (int)((seconds % 1) * 1000));
+    }
+
+
     void SpawnAllLines()
     {
-        for (int i = 0; i < Mathf.Min(lyricsTimestamps.Count, midiData.Count); i++)
+        foreach (List<float> lineData in midiData)
         {
-            GameObject line = Instantiate(linePrefab, canvasRect);
-
-            RectTransform lineRect = line.GetComponent<RectTransform>();
-
-            // Calculate the normalized position based on the song duration
-            float normalizedPosition = lyricsTimestamps[i] / songDuration;
-            lineRect.anchoredPosition = new Vector2((canvasRect.sizeDelta.x * normalizedPosition) + space, 0f);
-
-            // Use MIDI data for Y position
-            if (midiData[i].Count > 0)
+            foreach (float value in lineData)
             {
-                float midiY = midiData[i][0];
-                lineRect.anchoredPosition += new Vector2(0f, midiY);
+                GameObject line = Instantiate(linePrefab, canvasRect);
 
-                Debug.Log("Spawned line at timestamp " + lyricsTimestamps[i] + " with Y position " + midiY);
+                RectTransform lineRect = line.GetComponent<RectTransform>();
+                lineRect.anchoredPosition = new Vector2((canvasRect.sizeDelta.x / 2) + space, (((value * (canvasRect.sizeDelta.y / 2)) / 55) - 2000));
+
+                spawnedLines.Add(line);
+
+                space += LineSpacing;
             }
-            else
-            {
-                Debug.LogError("MIDI data is empty for line at timestamp " + lyricsTimestamps[i]);
-            }
-
-            spawnedLines.Add(line);
-
-            space += LineSpacing;
         }
     }
 
@@ -133,10 +131,13 @@ public class testGenerate : MonoBehaviour
                 float newX = lineRect.anchoredPosition.x - moveSpeed * Time.deltaTime;
                 lineRect.anchoredPosition = new Vector2(newX, lineRect.anchoredPosition.y);
 
-                // You can add logic to destroy lines when they are no longer visible if needed
-
-                yield return null;
+                if (lineRect.anchoredPosition.x <= -space)
+                {
+                    Destroy(line);
+                }
             }
+
+            yield return null;
         }
     }
 }
