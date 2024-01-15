@@ -16,6 +16,9 @@ public class DownloadSong : MonoBehaviour
     public string fileURL = "https://storage.googleapis.com/karaoke-cfa02.appspot.com/80s/a-ha%20-%20Take%20On%20Me%20(Lyrics).mp3";
 
     private string SongName;
+    private string BPMName;
+    private string LyricsName;
+    private string MIDIName;
 
 
     private void Start()
@@ -87,7 +90,7 @@ public class DownloadSong : MonoBehaviour
         // Check if UIManager is found.
         if (uiManager != null)
         {
-            uiManager.NavigateToPlayGame(SongName);
+            uiManager.NavigateToPlayGame(SongName, BPMName, LyricsName, MIDIName);
         }
         else
         {

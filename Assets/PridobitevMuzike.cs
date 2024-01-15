@@ -20,7 +20,7 @@ public class PridobitevMuzike : MonoBehaviour
 
     private Dictionary<string, Music> songDictionary = new Dictionary<string, Music>();
     ApiResponse apiResponse = new ApiResponse();
-    private const string ApiUrl = "https://snapsyncapi-puce.vercel.app/api/songs";
+    private const string ApiUrl = "https://snapsync-two.vercel.app/api/songs";
 
     async void Start()
     {
@@ -73,10 +73,10 @@ public class PridobitevMuzike : MonoBehaviour
 
         songDictionary[prefabName] = music;
 
-        StartCoroutine(CreateMusicBox(music.CoverURL, music.Song_name, music.Artist, nameSt, music.Link));
+        StartCoroutine(CreateMusicBox(music.CoverURL, music.Song_name, music.Artist, nameSt, music.Link, music.BPM, music.Lyrics, music.MIDI));
     }
 
-    IEnumerator CreateMusicBox(string url, string Song_name, string Artist, int nameSt, string Link)
+    IEnumerator CreateMusicBox(string url, string Song_name, string Artist, int nameSt, string Link, string BPM, string Lyrics, string MIDI)
     {
         using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(url))
         {
@@ -102,6 +102,9 @@ public class PridobitevMuzike : MonoBehaviour
                 newMusicBox.transform.Find("ArtistText").GetComponent<Text>().text = Artist;
                 newMusicBox.transform.Find("CoverURLImage").GetComponent<Image>().sprite = sprite;
                 newMusicBox.transform.Find("UrlSongPlayhidden").GetComponent<Text>().text = Link;
+                newMusicBox.transform.Find("BPMhidden").GetComponent<Text>().text = BPM;
+                newMusicBox.transform.Find("Lyricshidden").GetComponent<Text>().text = Lyrics;
+                newMusicBox.transform.Find("MIDIhidden").GetComponent<Text>().text = MIDI;
             }
             else
             {
@@ -113,7 +116,9 @@ public class PridobitevMuzike : MonoBehaviour
 
 public class Music
 {
-    public string Artist { get; set; }
+    public string Artist { get; set; }    
+    public string BPM { get; set; }    
+    public string MIDI { get; set; }    
     public string CoverURL { get; set; }
     public string Link { get; set; }
     public string Lyrics { get; set; }
