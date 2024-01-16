@@ -825,7 +825,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loudness: 0
-  loudnessThreshold: 0.15
+  loudnessThreshold: 1
   sensitivity: 100
   moveSpeed: 1500
   minY: 1300
