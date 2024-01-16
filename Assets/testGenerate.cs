@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 public class testGenerate : MonoBehaviour
 {
     public GameObject linePrefab;
+    public GameObject testPrefab;
     public RectTransform canvasRect;
     public float LineSpacing = 0f;
     public Text BPMSpeed;
@@ -18,8 +19,11 @@ public class testGenerate : MonoBehaviour
 
     private List<List<float>> midiData = new List<List<float>>();
     private List<string> lyricsData = new List<string>();
+    private List<GameObject> spawnedPrefabs = new List<GameObject>();
     private List<GameObject> spawnedLines = new List<GameObject>();
+    private LineRenderer[] lineRenderers;
     private float space = 0f;
+    private float sizeofLine = 0f;
 
     void Start()
     {
@@ -28,9 +32,20 @@ public class testGenerate : MonoBehaviour
         LoadMidiData();
         ParseLyricsData();
 
-        SpawnAllLines();
+        RightDurationLine(SongLength);
+
+        for (int i = 0; i < lyricsData.Count - 1; i++)
+        {
+            float duration = CalculateDuration(lyricsData[i], lyricsData[i + 1]);
+
+            // Spawn prefa
+            SpawnPrefab(lyricsData[i], lyricsData[i + 1]);
+        }
+
+        //SpawnAllLines();
 
         StartCoroutine(AnimateLines());
+        StartCoroutine(AnimatePrefabs());
     }
 
     //Midi
@@ -57,7 +72,7 @@ public class testGenerate : MonoBehaviour
 
     void ParseLyricsData()
     {
-        if(Lyricsdata != null)
+        if (Lyricsdata != null)
         {
             List<string> timestamps = ExtractTimestamps(Lyricsdata.text);
 
@@ -101,6 +116,83 @@ public class testGenerate : MonoBehaviour
         return new TimeSpan(0, 0, minutes, (int)seconds, (int)((seconds % 1) * 1000));
     }
 
+    void RightDurationLine(float totalDuration)
+    {
+        sizeofLine = (totalDuration * float.Parse(BPMSpeed.text));
+
+        Debug.Log(sizeofLine);
+
+        Vector3 spawnPosition = new Vector3((sizeofLine / 2), 700f, 0f);
+
+        GameObject spawnedPrefab = Instantiate(linePrefab, spawnPosition, Quaternion.identity);
+
+        RectTransform bigassline = spawnedPrefab.GetComponent<RectTransform>();
+
+        bigassline.sizeDelta = new Vector2(sizeofLine, 10f);
+
+        bigassline.SetParent(canvasRect, false);
+
+        spawnedPrefabs.Add(spawnedPrefab);
+
+
+    }
+
+    void SpawnPrefab(string timestamp1, string timestamp2)
+    {
+        float time1 = (float)ExtractTimeSpan(timestamp1).TotalSeconds;
+        Debug.Log(time1);
+        float time2 = (float)ExtractTimeSpan(timestamp2).TotalSeconds;
+        Debug.Log(time2);
+        // Calculate positions based on time values
+        Vector2 startPos = new Vector2((time1 * float.Parse(BPMSpeed.text)) + (canvasRect.sizeDelta.x / 2), (canvasRect.sizeDelta.y / 2));
+        Vector2 endPos = new Vector2((time2 * float.Parse(BPMSpeed.text)) + (canvasRect.sizeDelta.x / 2), (canvasRect.sizeDelta.y / 2));
+
+        // Instantiate a line prefab
+        GameObject spawnedPrefab = Instantiate(testPrefab, canvasRect);
+        LineRenderer lineRenderer = spawnedPrefab.GetComponent<LineRenderer>();
+
+        // Set line positions
+        lineRenderer.SetPosition(0, startPos);
+        lineRenderer.SetPosition(1, endPos);
+
+        spawnedLines.Add(spawnedPrefab);
+        lineRenderers = spawnedLines.ConvertAll(line => line.GetComponent<LineRenderer>()).ToArray();
+
+        // Calculate positions for prefab instantiation
+        Vector3[] linePositions = new Vector3[lineRenderer.positionCount];
+        lineRenderer.GetPositions(linePositions);
+
+        int a = 0;
+        for (int i = 0; i <= 4; i++)
+        {
+            float t = i / 5f;
+            Vector3 position = Vector3.Lerp(linePositions[0], linePositions[1], t);
+            position.y = ((midiData[a][i] * (canvasRect.sizeDelta.y / 2)) / 55);
+            GameObject spawnedPref = Instantiate(linePrefab, position, Quaternion.identity, canvasRect);
+            spawnedPrefabs.Add(spawnedPref);
+
+            if (i == 0)
+            {
+                SetImageColor(spawnedPrefab, Color.green);
+            }
+            else if (i == 4)
+            {
+                SetImageColor(spawnedPrefab, Color.red);
+            }
+
+
+        }
+        a++;
+    }
+
+    void SetImageColor(GameObject prefab, Color color)
+    {
+        Image image = prefab.GetComponent<Image>();
+        if (image != null)
+        {
+            image.color = color;
+        }
+    }
 
     void SpawnAllLines()
     {
@@ -113,27 +205,64 @@ public class testGenerate : MonoBehaviour
                 RectTransform lineRect = line.GetComponent<RectTransform>();
                 lineRect.anchoredPosition = new Vector2((canvasRect.sizeDelta.x / 2) + space, (((value * (canvasRect.sizeDelta.y / 2)) / 55) - 2000));
 
-                spawnedLines.Add(line);
+                spawnedPrefabs.Add(line);
 
                 space += LineSpacing;
             }
         }
     }
 
-    IEnumerator AnimateLines()
+    IEnumerator AnimatePrefabs()
     {
         while (true)
         {
-            foreach (GameObject line in spawnedLines)
+            foreach (GameObject line in spawnedPrefabs)
             {
                 RectTransform lineRect = line.GetComponent<RectTransform>();
 
-                float newX = lineRect.anchoredPosition.x - moveSpeed * Time.deltaTime;
+                float newX = lineRect.anchoredPosition.x - (moveSpeed * Time.deltaTime);
                 lineRect.anchoredPosition = new Vector2(newX, lineRect.anchoredPosition.y);
 
-                if (lineRect.anchoredPosition.x <= -space)
+            }
+
+            yield return null;
+        }
+    }
+
+    IEnumerator AnimateLines()
+    {
+        // Get all LineRenderer components
+        lineRenderers = spawnedLines.ConvertAll(line => line.GetComponent<LineRenderer>()).ToArray();
+
+        while (true)
+        {
+            for (int i = 0; i < lineRenderers.Length; i++)
+            {
+                LineRenderer lineRenderer = lineRenderers[i];
+
+                // Get current line positions
+                Vector3 pos1 = lineRenderer.GetPosition(0);
+                Vector3 pos2 = lineRenderer.GetPosition(1);
+
+                // Update line positions based on moveSpeed
+                float moveDistance = moveSpeed * Time.deltaTime;
+                pos1.x -= moveDistance;
+                pos2.x -= moveDistance;
+
+                // Set the updated positions
+                lineRenderer.SetPosition(0, pos1);
+                lineRenderer.SetPosition(1, pos2);
+
+                // If the line goes off-screen, reset its position
+                if (pos2.x < -canvasRect.rect.width)
                 {
-                    Destroy(line);
+                    float lastLineX = lineRenderers[lineRenderers.Length - 1].GetPosition(1).x;
+                    pos1.x = lastLineX;
+                    pos2.x = lastLineX + LineSpacing;
+
+                    // Set the updated positions after resetting
+                    lineRenderer.SetPosition(0, pos1);
+                    lineRenderer.SetPosition(1, pos2);
                 }
             }
 

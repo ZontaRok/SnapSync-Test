@@ -10,12 +10,16 @@ public class AudioLoudnessDetection : MonoBehaviour
     public float sensitivity = 100;
     public float moveSpeed = 0.1f;
 
+    public float minY = -2.0f;
+    public float maxY = 2.0f;
+
+
     AudioSource audioSource;
 
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        audioSource.clip = Microphone.Start(null, true, 10, 44100);
+        audioSource.clip = Microphone.Start(null, true, 1, 44100);
         audioSource.loop = true;
         while (!(Microphone.GetPosition(null) > 0)) { }
         audioSource.Play();
@@ -25,24 +29,30 @@ public class AudioLoudnessDetection : MonoBehaviour
 
     void Update()
     {
-        loudness = GetAvragevolume() * sensitivity;
+        loudness = GetAverageVolume() * sensitivity;
 
-        if (loudness < loudnessThreshold)
+        float translationSpeed = Mathf.Lerp(0, moveSpeed, loudness / loudnessThreshold);
+
+        if (loudness > loudnessThreshold)
         {
-            transform.Translate(Vector3.up * moveSpeed * Time.deltaTime);
-        }   
+            transform.Translate(Vector3.up * translationSpeed * Time.deltaTime);
+        }
         else
         {
-            transform.Translate(Vector3.down * moveSpeed * Time.deltaTime);
+            transform.Translate(Vector3.down * translationSpeed * Time.deltaTime);
         }
+
+        float newY = Mathf.Clamp(transform.position.y, minY, maxY);
+        transform.position = new Vector3(transform.position.x, newY, transform.position.z);
     }
 
-    float GetAvragevolume()
-    {        
+
+    float GetAverageVolume()
+    {
         float[] data = new float[64];
         float a = 0;
         audioSource.GetOutputData(data, 0);
-        foreach(float s in data)
+        foreach (float s in data)
         {
             a += Mathf.Abs(s);
         }

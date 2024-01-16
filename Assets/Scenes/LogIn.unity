@@ -380,7 +380,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1812477110}
-  m_RootOrder: 10
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -667,6 +667,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9eef5056c71b6444a50fe6eb2fee2f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ScoreNumber: {fileID: 1756110089}
+  score: 0
 --- !u!61 &56597079
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -823,9 +825,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loudness: 0
-  loudnessThreshold: 0.5
+  loudnessThreshold: 0.15
   sensitivity: 100
-  moveSpeed: 100
+  moveSpeed: 1500
+  minY: 1300
+  maxY: 2000
 --- !u!1 &91502284
 GameObject:
   m_ObjectHideFlags: 0
@@ -1180,7 +1184,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loginP: {fileID: 1618935864}
   singupP: {fileID: 1273092659}
-  profP: {fileID: 762795578}
+  profP: {fileID: 1519802510}
   forgotPassP: {fileID: 761600852}
   napakP: {fileID: 914740906}
   loginEmail: {fileID: 1428046393}
@@ -2631,76 +2635,29 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '[00:34.85]Talking away
-
-    [00:37.60]I don''t know what I''m to say
-
-    [00:40.60]I''ll
-    say it anyway
-
-    [00:43.35]Today is another day to find you
-
-    [00:46.10]Shying
-    away
-
-    [00:49.49]I''ll be coming for your love. OK?
-
-    [00:51.75]Take
-    on me (take on me)
-
-    [00:57.50]Take me on (take on me)
-
-    [01:03.00]I''ll
-    be gone
-
-    [01:07.25]In a day or two
-
-    [01:14.66]So needless to say
-
-    [01:16.91]Of
-    odds and ends
-
-    [01:20.16]But I''ll be stumbling away
-
-    [01:22.91]Slowly
-    learning that life is OK.
-
-    [01:25.66]Say after me,
-
-    [01:28.41]"It''s
-    no better to be safe than sorry."
-
-    [01:31.41]Take on me (take on me)
-
-    [01:36.91]Take
-    me on (take on me)
-
-    [01:42.56]I''ll be gone
-
-    [01:46.81]In a day or
-    two
-
-    [02:33.45]Oh, things that you say. Yeah.
-
-    [02:36.36]Is it life
-    or just to play my worries away?
-
-    [02:39.11]You''re all the things I''ve
-    got to remember
-
-    [02:43.11]You''re shying away
-
-    [02:47.50]I''ll be
-    coming for you anyway
-
-    [02:50.51]Take on me (take on me)
-
-    [02:56.01]Take
-    me on (take on me)
-
-    [03:02.00]I''ll be gone
-
-    [03:07.17]In a day'
+  m_Text: '[00:20.84]I wanna take you somewhere so you know I care [00:25.09]But
+    it''s so cold and I don''t know where [00:29.35]I brought you daffodils in a
+    pretty string [00:33.59]But they won''t flower like they did last spring [00:41.29]And
+    I wanna kiss you, make you feel alright [00:45.82]I''m just so tired to share
+    my nights [00:50.05]I wanna cry and I wanna love [00:54.04]But all my tears have
+    been used up [01:01.77]On another love, another love [01:06.55]All my tears have
+    been used up [01:10.26]On another love, another love [01:14.51]All my tears have
+    been used up [01:18.23]On another love, another love [01:23.04]All my tears have
+    been used up, up [01:54.37]And if somebody hurts you, I wanna fight [01:58.35]But
+    my hand''s been broken one too many times [02:02.34]So I''ll use my voice, I''ll
+    be so fucking rude [02:06.32]Words, they always win, but I know I''ll lose [02:10.04]And
+    I''d sing a song that''d be just ours [02:14.03]But I sang ''em all to another
+    heart [02:18.01]And I wanna cry, I wanna learn to love [02:22.00]But all my tears
+    have been used up [02:25.98]On another love, another love [02:30.24]All my tears
+    have been used up [02:33.42]On another love, another love [02:38.19]All my tears
+    have been used up [02:41.38]On another love, another love [02:45.64]All my tears
+    have been used up, up [03:06.89]Oh, need a love, now [03:10.34]My heart is thinking
+    of [03:12.47]I wanna sing a song that''d be just ours [03:16.44]But I sang ''em
+    all to another heart [03:20.16]And I wanna cry, I wanna fall in love [03:24.48]But
+    all my tears have been used up [03:28.19]On another love, another love [03:32.44]All
+    my tears have been used up [03:35.91]On another love, another love [03:40.15]All
+    my tears have been used up [03:43.60]On another love, another love [03:47.85]All
+    my tears have been used up, up'
 --- !u!222 &500606425
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3510,12 +3467,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   linePrefab: {fileID: 807622211965538699, guid: 792830455e8132142a667be86316baea, type: 3}
+  testPrefab: {fileID: 4573445403685829788, guid: 1261c4b255050dd4986106dd2d70151e, type: 3}
   canvasRect: {fileID: 613574593}
-  LineSpacing: 100
-  BPMSpeed: {fileID: 619026348}
-  MIDIdata: {fileID: 2082487573}
-  Lyricsdata: {fileID: 500606424}
-  SongLength: 225
+  LineSpacing: 0
+  BPMSpeed: {fileID: 1622394449}
+  MIDIdata: {fileID: 1854437012}
+  Lyricsdata: {fileID: 985547390}
+  SongLength: 241
 --- !u!114 &613574599
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3604,7 +3562,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 120
+  m_Text: 123
 --- !u!222 &619026349
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5764,108 +5722,29 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '[00:20.84]I wanna take you somewhere so you know I care
-
-    [00:25.09]But
-    it''s so cold and I don''t know where
-
-    [00:29.35]I brought you daffodils
-    in a pretty string
-
-    [00:33.59]But they won''t flower like they did last spring
-
-    [00:41.29]And
-    I wanna kiss you, make you feel alright
-
-    [00:45.82]I''m just so tired to
-    share my nights
-
-    [00:50.05]I wanna cry and I wanna love
-
-    [00:54.04]But
-    all my tears have been used up
-
-    [01:01.77]On another love, another love
-
-    [01:06.55]All
-    my tears have been used up
-
-    [01:10.26]On another love, another love
-
-    [01:14.51]All
-    my tears have been used up
-
-    [01:18.23]On another love, another love
-
-    [01:23.04]All
-    my tears have been used up, up
-
-    [01:54.37]And if somebody hurts you, I wanna
-    fight
-
-    [01:58.35]But my hand''s been broken one too many times
-
-    [02:02.34]So
-    I''ll use my voice, I''ll be so fucking rude
-
-    [02:06.32]Words, they always
-    win, but I know I''ll lose
-
-    [02:10.04]And I''d sing a song that''d be just
-    ours
-
-    [02:14.03]But I sang ''em all to another heart
-
-    [02:18.01]And I
-    wanna cry, I wanna learn to love
-
-    [02:22.00]But all my tears have been used
-    up
-
-    [02:25.98]On another love, another love
-
-    [02:30.24]All my tears have
-    been used up
-
-    [02:33.42]On another love, another love
-
-    [02:38.19]All
-    my tears have been used up
-
-    [02:41.38]On another love, another love
-
-    [02:45.64]All
-    my tears have been used up, up
-
-    [03:06.89]Oh, need a love, now
-
-    [03:10.34]My
-    heart is thinking of
-
-    [03:12.47]I wanna sing a song that''d be just ours
-
-    [03:16.44]But
-    I sang ''em all to another heart
-
-    [03:20.16]And I wanna cry, I wanna fall
-    in love
-
-    [03:24.48]But all my tears have been used up
-
-    [03:28.19]On another
-    love, another love
-
-    [03:32.44]All my tears have been used up
-
-    [03:35.91]On
-    another love, another love
-
-    [03:40.15]All my tears have been used up
-
-    [03:43.60]On
-    another love, another love
-
-    [03:47.85]All my tears have been used up, up'
+  m_Text: '[00:20.84]I wanna take you somewhere so you know I care [00:25.09]But
+    it''s so cold and I don''t know where [00:29.35]I brought you daffodils in a
+    pretty string [00:33.59]But they won''t flower like they did last spring [00:41.29]And
+    I wanna kiss you, make you feel alright [00:45.82]I''m just so tired to share
+    my nights [00:50.05]I wanna cry and I wanna love [00:54.04]But all my tears have
+    been used up [01:01.77]On another love, another love [01:06.55]All my tears have
+    been used up [01:10.26]On another love, another love [01:14.51]All my tears have
+    been used up [01:18.23]On another love, another love [01:23.04]All my tears have
+    been used up, up [01:54.37]And if somebody hurts you, I wanna fight [01:58.35]But
+    my hand''s been broken one too many times [02:02.34]So I''ll use my voice, I''ll
+    be so fucking rude [02:06.32]Words, they always win, but I know I''ll lose [02:10.04]And
+    I''d sing a song that''d be just ours [02:14.03]But I sang ''em all to another
+    heart [02:18.01]And I wanna cry, I wanna learn to love [02:22.00]But all my tears
+    have been used up [02:25.98]On another love, another love [02:30.24]All my tears
+    have been used up [02:33.42]On another love, another love [02:38.19]All my tears
+    have been used up [02:41.38]On another love, another love [02:45.64]All my tears
+    have been used up, up [03:06.89]Oh, need a love, now [03:10.34]My heart is thinking
+    of [03:12.47]I wanna sing a song that''d be just ours [03:16.44]But I sang ''em
+    all to another heart [03:20.16]And I wanna cry, I wanna fall in love [03:24.48]But
+    all my tears have been used up [03:28.19]On another love, another love [03:32.44]All
+    my tears have been used up [03:35.91]On another love, another love [03:40.15]All
+    my tears have been used up [03:43.60]On another love, another love [03:47.85]All
+    my tears have been used up, up'
 --- !u!222 &985547391
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8150,7 +8029,7 @@ RectTransform:
   m_Children:
   - {fileID: 1104906524}
   m_Father: {fileID: 1812477110}
-  m_RootOrder: 11
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -8409,6 +8288,86 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1618935864}
   m_CullTransparentMesh: 1
+--- !u!1 &1622394448
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1622394451}
+  - component: {fileID: 1622394450}
+  - component: {fileID: 1622394449}
+  m_Layer: 0
+  m_Name: TempBPM
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1622394449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1622394448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 14
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 123
+--- !u!222 &1622394450
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1622394448}
+  m_CullTransparentMesh: 1
+--- !u!224 &1622394451
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1622394448}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1812477110}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 160, y: 30}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1656207943
 GameObject:
   m_ObjectHideFlags: 0
@@ -8679,7 +8638,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1812477110}
-  m_RootOrder: 12
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -8893,7 +8852,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1812477110}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -8955,7 +8914,7 @@ GameObject:
   - component: {fileID: 1794476305}
   - component: {fileID: 1794476304}
   m_Layer: 5
-  m_Name: Nazaj
+  m_Name: Login
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9114,7 +9073,9 @@ RectTransform:
   - {fileID: 1833399099}
   - {fileID: 1854437011}
   - {fileID: 985547389}
+  - {fileID: 1622394451}
   - {fileID: 1756110088}
+  - {fileID: 1864469267}
   - {fileID: 35010965}
   - {fileID: 1473727753}
   - {fileID: 1715127439}
@@ -9285,85 +9246,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '76.12067,75.84833,75.706436,60.07283,76.76994
-
-    70.97473,70.85291,70.8806,70.837234,70.772766
-
-    75.1864,75.69812,64.64647,75.96165,69.503494
-
-    60.765266,70.677826,71.01098,64.90707,63.101555
-
-    63.05596,63.51639,64.05673,63.739277,63.024456
-
-    73.084145,73.092155,74.08153,73.63539,72.77648
-
-    62.020317,63.26493,52.278236,64.12074,75.39146
-
-    70.203255,70.72649,71.26933,71.20131,70.52708
-
-    60.086987,59.57594,60.197033,60.22555,58.70719
-
-    51.519028,52.118362,52.056274,52.699368,53.16169
-
-    70.75879,70.77179,70.45795,59.70139,60.37548
-
-    54.22722,52.027435,52.53439,51.90375,51.388138
-
-    71.961914,71.585144,78.525314,78.589325,78.45024
-
-    55.40529,60.150856,71.52783,57.433697,55.197865
-
-    51.218777,55.17383,55.374813,53.468536,52.495567
-
-    87.69168,87.550644,87.49324,87.41545,87.49473
-
-    80.9939,81.15167,81.34798,81.66463,81.492874
-
-    57.769127,59.92312,87.04314,57.791645,57.419666
-
-    67.15741,67.12985,67.45,68.27243,67.43649
-
-    71.11511,87.39493,87.535965,87.412674,87.19736
-
-    80.00727,79.60945,78.59973,77.93292,78.327095
-
-    77.06627,68.846085,70.35268,68.51701,67.34452
-
-    78.63916,78.75412,78.82308,79.091965,79.27121
-
-    55.181168,59.185287,59.057796,56.532845,69.58833
-
-    65.70453,66.577194,66.27754,65.19322,64.02949
-
-    66.78197,63.36984,64.371216,56.194233,54.265625
-
-    86.93754,87.01222,86.98102,78.078156,78.24071
-
-    62.780903,61.87762,60.122944,58.993896,73.73654
-
-    50.911926,71.75397,70.461945,70.107765,70.77555
-
-    64.95829,64.8368,64.0278,52.971855,70.153275
-
-    53.102997,53.787334,53.559505,53.390236,53.463467
-
-    88.08722,88.08908,88.02759,88.03671,54.363693
-
-    78.36788,78.0569,68.222916,53.008633,64.68212
-
-    70.346146,53.520126,71.25037,71.171005,69.01834
-
-    53.4113,53.42209,88.08314,87.85297,87.98839
-
-    51.689407,75.97725,75.873024,76.01828,71.8322
-
-    77.44177,77.34622,54.01882,77.844635,77.616325
-
-    75.66914,60.521793,59.6747,59.3882,53.478027
-
-    83.53741,83.36371,52.49318,51.99717,83.16992
-
-    62.856606,52.34237,60.539074,62.282547,61.44984'
+  m_Text: "76.12067,75.84833,75.706436,60.07283,76.76994\r\n70.97473,70.85291,70.8806,70.837234,70.772766\r\n75.1864,75.69812,64.64647,75.96165,69.503494\r\n60.765266,70.677826,71.01098,64.90707,63.101555\r\n63.05596,63.51639,64.05673,63.739277,63.024456\r\n73.084145,73.092155,74.08153,73.63539,72.77648\r\n62.020317,63.26493,52.278236,64.12074,75.39146\r\n70.203255,70.72649,71.26933,71.20131,70.52708\r\n60.086987,59.57594,60.197033,60.22555,58.70719\r\n51.519028,52.118362,52.056274,52.699368,53.16169\r\n70.75879,70.77179,70.45795,59.70139,60.37548\r\n54.22722,52.027435,52.53439,51.90375,51.388138\r\n71.961914,71.585144,78.525314,78.589325,78.45024\r\n55.40529,60.150856,71.52783,57.433697,55.197865\r\n51.218777,55.17383,55.374813,53.468536,52.495567\r\n87.69168,87.550644,87.49324,87.41545,87.49473\r\n80.9939,81.15167,81.34798,81.66463,81.492874\r\n57.769127,59.92312,87.04314,57.791645,57.419666\r\n67.15741,67.12985,67.45,68.27243,67.43649\r\n71.11511,87.39493,87.535965,87.412674,87.19736\r\n80.00727,79.60945,78.59973,77.93292,78.327095\r\n77.06627,68.846085,70.35268,68.51701,67.34452\r\n78.63916,78.75412,78.82308,79.091965,79.27121\r\n55.181168,59.185287,59.057796,56.532845,69.58833\r\n65.70453,66.577194,66.27754,65.19322,64.02949\r\n66.78197,63.36984,64.371216,56.194233,54.265625\r\n86.93754,87.01222,86.98102,78.078156,78.24071\r\n62.780903,61.87762,60.122944,58.993896,73.73654\r\n50.911926,71.75397,70.461945,70.107765,70.77555\r\n64.95829,64.8368,64.0278,52.971855,70.153275\r\n53.102997,53.787334,53.559505,53.390236,53.463467\r\n88.08722,88.08908,88.02759,88.03671,54.363693\r\n78.36788,78.0569,68.222916,53.008633,64.68212\r\n70.346146,53.520126,71.25037,71.171005,69.01834\r\n53.4113,53.42209,88.08314,87.85297,87.98839\r\n51.689407,75.97725,75.873024,76.01828,71.8322\r\n77.44177,77.34622,54.01882,77.844635,77.616325\r\n75.66914,60.521793,59.6747,59.3882,53.478027\r\n83.53741,83.36371,52.49318,51.99717,83.16992\r\n62.856606,52.34237,60.539074,62.282547,61.44984\r"
 --- !u!222 &1854437013
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9507,6 +9390,101 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1858332209}
   m_CullTransparentMesh: 1
+--- !u!1 &1864469266
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1864469267}
+  - component: {fileID: 1864469269}
+  - component: {fileID: 1864469268}
+  - component: {fileID: 1864469270}
+  m_Layer: 0
+  m_Name: LyricsShow
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1864469267
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1864469266}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1812477110}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 1.7898, y: -1043.6774}
+  m_SizeDelta: {x: 1060.7, y: 123.0334}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1864469268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1864469266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.9716981, g: 0.041251317, b: 0.7460099, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 50
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 4
+    m_MaxSize: 50
+    m_Alignment: 1
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 
+--- !u!222 &1864469269
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1864469266}
+  m_CullTransparentMesh: 1
+--- !u!114 &1864469270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1864469266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e62fa081e58d38b4ab4bdcc40d357bc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lyricsText: {fileID: 1864469268}
+  LyricsInput: {fileID: 985547390}
 --- !u!1 &1888951154
 GameObject:
   m_ObjectHideFlags: 0
@@ -10243,7 +10221,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "86.163055,86.19176,86.10849,74.3111,73.82686\r\n72.70929,61.206882,61.109573,61.014782,61.653877\r\n63.811718,62.01146,98.0912,62.6452,63.29925\r\n73.09424,73.51989,74.03595,73.77294,73.37276\r\n105.27289,105.41583,61.63368,58.979954,106.33977\r\n70.15024,72.79978,73.1987,56.02026,56.627388\r\n53.538147,106.10891,98.67923,63.19496,64.32811\r\n68.84967,68.82521,57.5106,57.391907,68.78598\r\n79.3116,79.2239,79.12912,79.10287,78.92467\r\n87.91038,87.88609,67.577385,53.033806,54.75532\r\n63.32033,61.911804,59.171143,61.891205,62.872925\r\n80.06216,80.21056,80.20164,80.060715,79.81972\r\n73.68065,73.577484,62.070145,60.24336,60.176605\r\n73.53525,73.41433,73.33009,73.201065,73.49687\r\n72.11073,72.81668,72.935776,72.65671,72.71446\r\n64.2369,63.88069,52.861713,64.27945,61.46616\r\n74.88753,73.42526,72.86752,73.68436,72.25423\r\n63.880898,64.27577,63.83994,64.151184,63.713665\r\n64.828674,64.93547,53.57196,52.794014,78.33089\r\n81.81386,88.58516,88.47457,81.4842,89.220314\r\n88.07025,88.03369,87.93416,79.03054,77.87267\r\n74.90019,75.83722,76.048584,75.66273,75.62519\r\n76.31648,76.14023,76.02501,76.16778,76.355255\r\n58.01602,58.67173,60.126846,71.803925,72.924545\r\n67.846504,67.98912,68.79373,68.0454,65.60236\r\n57.688828,54.40408,52.347054,67.91225,67.91858\r\n64.501396,64.35308,66.81901,52.449333,52.846886\r\n63.592976,63.935028,63.78012,63.722008,62.249245\r\n87.976074,87.928925,87.93811,87.900055,87.76293\r"
+  m_Text: "76.12067,75.84833,75.706436,60.07283,76.76994\r\n70.97473,70.85291,70.8806,70.837234,70.772766\r\n75.1864,75.69812,64.64647,75.96165,69.503494\r\n60.765266,70.677826,71.01098,64.90707,63.101555\r\n63.05596,63.51639,64.05673,63.739277,63.024456\r\n73.084145,73.092155,74.08153,73.63539,72.77648\r\n62.020317,63.26493,52.278236,64.12074,75.39146\r\n70.203255,70.72649,71.26933,71.20131,70.52708\r\n60.086987,59.57594,60.197033,60.22555,58.70719\r\n51.519028,52.118362,52.056274,52.699368,53.16169\r\n70.75879,70.77179,70.45795,59.70139,60.37548\r\n54.22722,52.027435,52.53439,51.90375,51.388138\r\n71.961914,71.585144,78.525314,78.589325,78.45024\r\n55.40529,60.150856,71.52783,57.433697,55.197865\r\n51.218777,55.17383,55.374813,53.468536,52.495567\r\n87.69168,87.550644,87.49324,87.41545,87.49473\r\n80.9939,81.15167,81.34798,81.66463,81.492874\r\n57.769127,59.92312,87.04314,57.791645,57.419666\r\n67.15741,67.12985,67.45,68.27243,67.43649\r\n71.11511,87.39493,87.535965,87.412674,87.19736\r\n80.00727,79.60945,78.59973,77.93292,78.327095\r\n77.06627,68.846085,70.35268,68.51701,67.34452\r\n78.63916,78.75412,78.82308,79.091965,79.27121\r\n55.181168,59.185287,59.057796,56.532845,69.58833\r\n65.70453,66.577194,66.27754,65.19322,64.02949\r\n66.78197,63.36984,64.371216,56.194233,54.265625\r\n86.93754,87.01222,86.98102,78.078156,78.24071\r\n62.780903,61.87762,60.122944,58.993896,73.73654\r\n50.911926,71.75397,70.461945,70.107765,70.77555\r\n64.95829,64.8368,64.0278,52.971855,70.153275\r\n53.102997,53.787334,53.559505,53.390236,53.463467\r\n88.08722,88.08908,88.02759,88.03671,54.363693\r\n78.36788,78.0569,68.222916,53.008633,64.68212\r\n70.346146,53.520126,71.25037,71.171005,69.01834\r\n53.4113,53.42209,88.08314,87.85297,87.98839\r\n51.689407,75.97725,75.873024,76.01828,71.8322\r\n77.44177,77.34622,54.01882,77.844635,77.616325\r\n75.66914,60.521793,59.6747,59.3882,53.478027\r\n83.53741,83.36371,52.49318,51.99717,83.16992\r\n62.856606,52.34237,60.539074,62.282547,61.44984\r"
 --- !u!222 &2082487574
 CanvasRenderer:
   m_ObjectHideFlags: 0
