@@ -73,10 +73,10 @@ public class PridobitevMuzike : MonoBehaviour
 
         songDictionary[prefabName] = music;
 
-        StartCoroutine(CreateMusicBox(music.CoverURL, music.Song_name, music.Artist, nameSt, music.Link, music.BPM, music.Lyrics, music.MIDI));
+        StartCoroutine(CreateMusicBox(music.CoverURL, music.Song_name, music.Artist, nameSt, music.Link, music.BPM, music.Lyrics, music.MIDI, music.lenght));
     }
 
-    IEnumerator CreateMusicBox(string url, string Song_name, string Artist, int nameSt, string Link, string BPM, string Lyrics, string MIDI)
+    IEnumerator CreateMusicBox(string url, string Song_name, string Artist, int nameSt, string Link, string BPM, string Lyrics, string MIDI, string SongLength)
     {
         using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(url))
         {
@@ -97,7 +97,16 @@ public class PridobitevMuzike : MonoBehaviour
                 // Add the Music data to the dictionary using the unique name as the key
                 songDictionary[uniqueName] = new Music { Artist = Artist, CoverURL = url, Song_name = Song_name };
 
-                // Set the text and image components of the instantiated prefab
+
+                double originalNumber = double.Parse(SongLength);
+
+                // Convert to minutes and seconds
+                int minutes = (int)originalNumber;  // Extract the whole part
+                int seconds = (int)((originalNumber - minutes) * 100);  // Extract the decimal part as seconds
+
+                // Use the formula to combine minutes and seconds
+                int result = minutes * 60 + seconds;
+
                 newMusicBox.transform.Find("SongNameText").GetComponent<Text>().text = Song_name;
                 newMusicBox.transform.Find("ArtistText").GetComponent<Text>().text = Artist;
                 newMusicBox.transform.Find("CoverURLImage").GetComponent<Image>().sprite = sprite;
@@ -105,6 +114,7 @@ public class PridobitevMuzike : MonoBehaviour
                 newMusicBox.transform.Find("BPMhidden").GetComponent<Text>().text = BPM;
                 newMusicBox.transform.Find("Lyricshidden").GetComponent<Text>().text = Lyrics;
                 newMusicBox.transform.Find("MIDIhidden").GetComponent<Text>().text = MIDI;
+                newMusicBox.transform.Find("Lengthhidden").GetComponent<Text>().text = result.ToString();
             }
             else
             {
@@ -123,6 +133,7 @@ public class Music
     public string Link { get; set; }
     public string Lyrics { get; set; }
     public string Song_name { get; set; }
+    public string lenght { get; set; }
 }
 
 public class ApiResponse

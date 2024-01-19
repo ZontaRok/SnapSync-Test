@@ -12,6 +12,7 @@ public class PlaySong : MonoBehaviour
     private string BPMName;
     private string LyricsName;
     private string MIDIName;
+    private string Songlength;
 
     public void OnClickButton()
     {
@@ -25,27 +26,32 @@ public class PlaySong : MonoBehaviour
             Transform TextBPM = allChildren[7];
             Transform TextLyrics = allChildren[9];
             Transform TextMIDI = allChildren[10];
+            Transform TextLength = allChildren[11];
 
             Text textComponentForSong_Name = TextSong_Name.GetComponent<Text>();
             Text textComponentForBPM = TextBPM.GetComponent<Text>();
             Text textComponentForLyrics = TextLyrics.GetComponent<Text>();
             Text textComponentForMIDI = TextMIDI.GetComponent<Text>();
+            Text textComponentForLength = TextLength.GetComponent<Text>();
 
             string Song_Name = textComponentForSong_Name.text;
             string BPM = textComponentForBPM.text;
             string Lyrics = textComponentForLyrics.text;
             string MIDI = textComponentForMIDI.text;
+            string songlength = textComponentForLength.text;
 
 
             Debug.Log(Song_Name);
             Debug.Log(BPM);
             Debug.Log(Lyrics);
             Debug.Log(MIDI);
+            Debug.Log(songlength);
 
             SongName = Song_Name;
             BPMName = BPM;
             LyricsName = Lyrics;
             MIDIName = MIDI;
+            Songlength = songlength;
         }
         else
         {
@@ -58,7 +64,7 @@ public class PlaySong : MonoBehaviour
         // Check if UIManager is found.
         if (uiManager != null)
         {
-            uiManager.NavigateToPlayGame(SongName, BPMName, LyricsName, MIDIName);
+            uiManager.NavigateToPlayGame(SongName, BPMName, LyricsName, MIDIName, Songlength);
         }
         else
         {

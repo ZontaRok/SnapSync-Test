@@ -19,6 +19,7 @@ public class DownloadSong : MonoBehaviour
     private string BPMName;
     private string LyricsName;
     private string MIDIName;
+    private string songLength;
 
 
     private void Start()
@@ -90,7 +91,7 @@ public class DownloadSong : MonoBehaviour
         // Check if UIManager is found.
         if (uiManager != null)
         {
-            uiManager.NavigateToPlayGame(SongName, BPMName, LyricsName, MIDIName);
+            uiManager.NavigateToPlayGame(SongName, BPMName, LyricsName, MIDIName, songLength);
         }
         else
         {

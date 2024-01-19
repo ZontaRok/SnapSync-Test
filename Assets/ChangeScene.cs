@@ -11,21 +11,23 @@ public class ChangeScene : MonoBehaviour
 
     private void Start()
     {
-        ActivatePanel(GameCPanel);
-        DeactivatePanel(playGamePanel);
+        //ActivatePanel(GameCPanel);
+        //DeactivatePanel(playGamePanel);
     }
 
-    public void NavigateToPlayGame(string SongName, string BPM, string Lyrics, string MIDI)
+    public void NavigateToPlayGame(string SongName, string BPM, string Lyrics, string MIDI, string SongLength)
     {
         Text textComponentSongName = playGamePanel.transform.Find("PlaySongName")?.GetComponent<Text>();
         Text textComponentLyrics = playGamePanel.transform.Find("Lyricshidden")?.GetComponent<Text>();
         Text textComponentBPM = playGamePanel.transform.Find("BPMhidden")?.GetComponent<Text>();
         Text textComponentMIDI = playGamePanel.transform.Find("MIDIhidden")?.GetComponent<Text>();
+        Text textComponentLength = playGamePanel.transform.Find("Lengthhidden")?.GetComponent<Text>();
 
         textComponentSongName.text = SongName;
         textComponentLyrics.text = Lyrics;
         textComponentBPM.text = BPM;
-        textComponentMIDI.text = MIDI;       
+        textComponentMIDI.text = MIDI;
+        textComponentLength.text = SongLength;
 
         DeactivatePanel(GameCPanel);
         ActivatePanel(playGamePanel);

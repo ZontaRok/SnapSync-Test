@@ -4,17 +4,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Text.RegularExpressions;
+using UnityEngine.Networking;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 public class testGenerate : MonoBehaviour
 {
     public GameObject linePrefab;
     public GameObject testPrefab;
+    public Text Score;
+    public Text SongName;
     public RectTransform canvasRect;
     public float LineSpacing = 0f;
     public Text BPMSpeed;
     public Text MIDIdata;
     public Text Lyricsdata;
-    public float SongLength;
+    public Text SongLength;
     private float moveSpeed;
 
     private List<List<float>> midiData = new List<List<float>>();
@@ -25,6 +30,9 @@ public class testGenerate : MonoBehaviour
     private float space = 0f;
     private float sizeofLine = 0f;
 
+    //https://snapsync-two.vercel.app/api/leaderboardpost?username=John&score=100&songName=ExampleSong
+    private const string ApiUrl = "https://snapsync-two.vercel.app/api/leaderboardpost?";
+
     void Start()
     {
         moveSpeed = float.Parse(BPMSpeed.text);
@@ -32,7 +40,8 @@ public class testGenerate : MonoBehaviour
         LoadMidiData();
         ParseLyricsData();
 
-        RightDurationLine(SongLength);
+
+        RightDurationLine(float.Parse(SongLength.text));
 
         for (int i = 0; i < lyricsData.Count - 1; i++)
         {
@@ -46,6 +55,37 @@ public class testGenerate : MonoBehaviour
 
         StartCoroutine(AnimateLines());
         StartCoroutine(AnimatePrefabs());
+
+        FetchAndDisplayMusic();
+    }
+
+
+    async Task FetchAndDisplayMusic()
+    {
+        string username = "neki";
+        string score = Score.text;
+        string Songname = SongName.text;
+        string YesApiUrl = ApiUrl+ "username=" + username + "&score=" + score + "&songName=" + SongName.text;
+        try
+        {
+            using (HttpClient httpClient = new HttpClient())
+            {
+                HttpResponseMessage response = await httpClient.GetAsync(YesApiUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Debug.Log("Dela api");
+                }
+                else
+                {
+                    Debug.Log($"Failed to fetch data. Status code: {response.StatusCode}");
+                }
+            }
+        }
+        catch (System.Exception ex)
+        {
+            Debug.Log($"An error occurred: {ex.Message}");
+        }
     }
 
     //Midi
@@ -53,7 +93,7 @@ public class testGenerate : MonoBehaviour
     {
         if (MIDIdata != null)
         {
-            string[] lines = MIDIdata.text.Split('\n');
+            string[] lines = MIDIdata.text.Split(';');
             foreach (string line in lines)
             {
                 string[] values = line.Trim().Split(',');
@@ -134,7 +174,6 @@ public class testGenerate : MonoBehaviour
 
         spawnedPrefabs.Add(spawnedPrefab);
 
-
     }
 
     void SpawnPrefab(string timestamp1, string timestamp2)
@@ -143,22 +182,19 @@ public class testGenerate : MonoBehaviour
         Debug.Log(time1);
         float time2 = (float)ExtractTimeSpan(timestamp2).TotalSeconds;
         Debug.Log(time2);
-        // Calculate positions based on time values
+
         Vector2 startPos = new Vector2((time1 * float.Parse(BPMSpeed.text)) + (canvasRect.sizeDelta.x / 2), (canvasRect.sizeDelta.y / 2));
         Vector2 endPos = new Vector2((time2 * float.Parse(BPMSpeed.text)) + (canvasRect.sizeDelta.x / 2), (canvasRect.sizeDelta.y / 2));
 
-        // Instantiate a line prefab
         GameObject spawnedPrefab = Instantiate(testPrefab, canvasRect);
         LineRenderer lineRenderer = spawnedPrefab.GetComponent<LineRenderer>();
 
-        // Set line positions
         lineRenderer.SetPosition(0, startPos);
         lineRenderer.SetPosition(1, endPos);
 
         spawnedLines.Add(spawnedPrefab);
         lineRenderers = spawnedLines.ConvertAll(line => line.GetComponent<LineRenderer>()).ToArray();
 
-        // Calculate positions for prefab instantiation
         Vector3[] linePositions = new Vector3[lineRenderer.positionCount];
         lineRenderer.GetPositions(linePositions);
 
@@ -231,7 +267,6 @@ public class testGenerate : MonoBehaviour
 
     IEnumerator AnimateLines()
     {
-        // Get all LineRenderer components
         lineRenderers = spawnedLines.ConvertAll(line => line.GetComponent<LineRenderer>()).ToArray();
 
         while (true)
@@ -240,27 +275,22 @@ public class testGenerate : MonoBehaviour
             {
                 LineRenderer lineRenderer = lineRenderers[i];
 
-                // Get current line positions
                 Vector3 pos1 = lineRenderer.GetPosition(0);
                 Vector3 pos2 = lineRenderer.GetPosition(1);
 
-                // Update line positions based on moveSpeed
                 float moveDistance = moveSpeed * Time.deltaTime;
                 pos1.x -= moveDistance;
                 pos2.x -= moveDistance;
 
-                // Set the updated positions
                 lineRenderer.SetPosition(0, pos1);
                 lineRenderer.SetPosition(1, pos2);
 
-                // If the line goes off-screen, reset its position
                 if (pos2.x < -canvasRect.rect.width)
                 {
                     float lastLineX = lineRenderers[lineRenderers.Length - 1].GetPosition(1).x;
                     pos1.x = lastLineX;
                     pos2.x = lastLineX + LineSpacing;
 
-                    // Set the updated positions after resetting
                     lineRenderer.SetPosition(0, pos1);
                     lineRenderer.SetPosition(1, pos2);
                 }
