@@ -29,6 +29,7 @@ public class testGenerate : MonoBehaviour
     private LineRenderer[] lineRenderers;
     private float space = 0f;
     private float sizeofLine = 0f;
+    private float countdownTimer;
 
     //https://snapsync-two.vercel.app/api/leaderboardpost?username=John&score=100&songName=ExampleSong
     private const string ApiUrl = "https://snapsync-two.vercel.app/api/leaderboardpost?";
@@ -47,16 +48,34 @@ public class testGenerate : MonoBehaviour
         {
             float duration = CalculateDuration(lyricsData[i], lyricsData[i + 1]);
 
-            // Spawn prefa
-            SpawnPrefab(lyricsData[i], lyricsData[i + 1]);
+            // Spawn prefab
+            SpawnPrefab(lyricsData[i], duration, lyricsData[i + 1], i);
         }
 
         //SpawnAllLines();
 
-        StartCoroutine(AnimateLines());
+        //StartCoroutine(AnimateLines());
         StartCoroutine(AnimatePrefabs());
-
         //FetchAndDisplayMusic();
+
+        countdownTimer = float.Parse(SongLength.text);
+
+    }
+
+    void Update()
+    {
+        countdownTimer -= Time.deltaTime;
+
+        if (countdownTimer <= 0f)
+        {
+
+            SendScoreToAPI();
+        }
+    }
+
+    void SendScoreToAPI()
+    {
+        Debug.Log("Function executed!");
     }
 
 
@@ -65,7 +84,7 @@ public class testGenerate : MonoBehaviour
         string username = "neki";
         string score = Score.text;
         string Songname = SongName.text;
-        string YesApiUrl = ApiUrl+ "username=" + username + "&score=" + score + "&songName=" + SongName.text;
+        string YesApiUrl = ApiUrl + "username=" + username + "&score=" + score + "&songName=" + SongName.text;
         try
         {
             using (HttpClient httpClient = new HttpClient())
@@ -176,7 +195,7 @@ public class testGenerate : MonoBehaviour
 
     }
 
-    void SpawnPrefab(string timestamp1, string timestamp2)
+    void SpawnPrefab(string timestamp1, float duration, string timestamp2, int midiCount)
     {
         float time1 = (float)ExtractTimeSpan(timestamp1).TotalSeconds;
         //Debug.Log(time1);
@@ -198,35 +217,20 @@ public class testGenerate : MonoBehaviour
         Vector3[] linePositions = new Vector3[lineRenderer.positionCount];
         lineRenderer.GetPositions(linePositions);
 
-        int a = 0;
+
+
         for (int i = 0; i <= 4; i++)
         {
             float t = i / 5f;
             Vector3 position = Vector3.Lerp(linePositions[0], linePositions[1], t);
-            position.y = ((midiData[a][i] * (canvasRect.sizeDelta.y / 2)) / 80);
+            float sizePositon = linePositions[1].x / linePositions[0].x;
+            position.y = ((midiData[midiCount][i] * (canvasRect.sizeDelta.y / 2)) / 120);
             GameObject spawnedPref = Instantiate(linePrefab, position, Quaternion.identity, canvasRect);
+
+            float scalingFactor = sizePositon / (duration * 2);
+            spawnedPref.transform.localScale = new Vector3(scalingFactor, 1f, 1f);
+
             spawnedPrefabs.Add(spawnedPref);
-
-            if (i == 0)
-            {
-                SetImageColor(spawnedPrefab, Color.green);
-            }
-            else if (i == 4)
-            {
-                SetImageColor(spawnedPrefab, Color.red);
-            }
-
-
-        }
-        a++;
-    }
-
-    void SetImageColor(GameObject prefab, Color color)
-    {
-        Image image = prefab.GetComponent<Image>();
-        if (image != null)
-        {
-            image.color = color;
         }
     }
 
@@ -256,7 +260,7 @@ public class testGenerate : MonoBehaviour
             {
                 RectTransform lineRect = line.GetComponent<RectTransform>();
 
-                float newX = lineRect.anchoredPosition.x - (moveSpeed * Time.deltaTime);
+                float newX = lineRect.anchoredPosition.x - ((moveSpeed * Time.deltaTime));
                 lineRect.anchoredPosition = new Vector2(newX, lineRect.anchoredPosition.y);
 
             }
