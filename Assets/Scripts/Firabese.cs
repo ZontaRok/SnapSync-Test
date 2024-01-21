@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 public class Firabese : MonoBehaviour
 {
-    public GameObject loginP, singupP, profP,forgotPassP, napakP;
+    public GameObject loginP, singupP, profP,forgotPassP,napakP,gameP;
 
     public InputField loginEmail, loginPassword, singupEmail, singupPassword, singupUserName, singupCPassword, forgotPassEmail;
 
@@ -40,6 +40,15 @@ public class Firabese : MonoBehaviour
                   "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
             }
         });
+    }
+
+    public void GameP()
+    {
+        loginP.SetActive(false);
+        singupP.SetActive(false);
+        profP.SetActive(false);
+        forgotPassP.SetActive(false);
+        gameP.SetActive(true);
     }
 
     public void OpenloginP()
@@ -74,6 +83,7 @@ public class Firabese : MonoBehaviour
         forgotPassP.SetActive(true);
     }
 
+  
     public void LoginUser()
     {
         if (string.IsNullOrEmpty(loginEmail.text) && string.IsNullOrEmpty(loginPassword.text) && string.IsNullOrEmpty(singupUserName.text))
