@@ -57,6 +57,7 @@ public class Firabese : MonoBehaviour
         singupP.SetActive(false);
         profP.SetActive(false);
         forgotPassP.SetActive(false);
+        gameP.SetActive(false);
     }
 
     public void OpensinginP()
@@ -65,6 +66,7 @@ public class Firabese : MonoBehaviour
         singupP.SetActive(true);
         profP.SetActive(false);
         forgotPassP.SetActive(false);
+        gameP.SetActive(false);
     }
 
     public void OpenprofP()
@@ -73,6 +75,7 @@ public class Firabese : MonoBehaviour
         singupP.SetActive(false);
         profP.SetActive(true);
         forgotPassP.SetActive(false);
+        gameP.SetActive(false);
     }
 
     public void OpenForgotPasswordP()
@@ -81,6 +84,7 @@ public class Firabese : MonoBehaviour
         singupP.SetActive(false);
         profP.SetActive(false);
         forgotPassP.SetActive(true);
+        gameP.SetActive(false);
     }
 
   
