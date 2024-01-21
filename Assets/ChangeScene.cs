@@ -11,8 +11,7 @@ public class ChangeScene : MonoBehaviour
 
     private void Start()
     {
-        //ActivatePanel(GameCPanel);
-        //DeactivatePanel(playGamePanel);
+
     }
 
     public void NavigateToPlayGame(string SongName, string BPM, string Lyrics, string MIDI, string SongLength)

@@ -56,7 +56,7 @@ public class testGenerate : MonoBehaviour
         StartCoroutine(AnimateLines());
         StartCoroutine(AnimatePrefabs());
 
-        FetchAndDisplayMusic();
+        //FetchAndDisplayMusic();
     }
 
 
@@ -119,7 +119,7 @@ public class testGenerate : MonoBehaviour
             for (int i = 0; i < timestamps.Count - 1; i++)
             {
                 float duration = CalculateDuration(timestamps[i], timestamps[i + 1]);
-                Debug.Log($"{timestamps[i]}, {duration:F2}, {timestamps[i + 1]}");
+                //Debug.Log($"{timestamps[i]}, {duration:F2}, {timestamps[i + 1]}");
             }
 
             lyricsData = timestamps;
@@ -160,7 +160,7 @@ public class testGenerate : MonoBehaviour
     {
         sizeofLine = (totalDuration * float.Parse(BPMSpeed.text));
 
-        Debug.Log(sizeofLine);
+        //Debug.Log(sizeofLine);
 
         Vector3 spawnPosition = new Vector3((sizeofLine / 2), 700f, 0f);
 
@@ -179,9 +179,9 @@ public class testGenerate : MonoBehaviour
     void SpawnPrefab(string timestamp1, string timestamp2)
     {
         float time1 = (float)ExtractTimeSpan(timestamp1).TotalSeconds;
-        Debug.Log(time1);
+        //Debug.Log(time1);
         float time2 = (float)ExtractTimeSpan(timestamp2).TotalSeconds;
-        Debug.Log(time2);
+        //Debug.Log(time2);
 
         Vector2 startPos = new Vector2((time1 * float.Parse(BPMSpeed.text)) + (canvasRect.sizeDelta.x / 2), (canvasRect.sizeDelta.y / 2));
         Vector2 endPos = new Vector2((time2 * float.Parse(BPMSpeed.text)) + (canvasRect.sizeDelta.x / 2), (canvasRect.sizeDelta.y / 2));
@@ -203,7 +203,7 @@ public class testGenerate : MonoBehaviour
         {
             float t = i / 5f;
             Vector3 position = Vector3.Lerp(linePositions[0], linePositions[1], t);
-            position.y = ((midiData[a][i] * (canvasRect.sizeDelta.y / 2)) / 55);
+            position.y = ((midiData[a][i] * (canvasRect.sizeDelta.y / 2)) / 80);
             GameObject spawnedPref = Instantiate(linePrefab, position, Quaternion.identity, canvasRect);
             spawnedPrefabs.Add(spawnedPref);
 
