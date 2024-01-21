@@ -21,6 +21,11 @@ public class testGenerate : MonoBehaviour
     public Text Lyricsdata;
     public Text SongLength;
     private float moveSpeed;
+    public GameObject LeaderBoardStran;
+    public GameObject GameplayStran;
+
+
+    public Firabese FirebaseBase;
 
     private List<List<float>> midiData = new List<List<float>>();
     private List<string> lyricsData = new List<string>();
@@ -30,6 +35,7 @@ public class testGenerate : MonoBehaviour
     private float space = 0f;
     private float sizeofLine = 0f;
     private float countdownTimer;
+    private bool scoreSent = false;
 
     //https://snapsync-two.vercel.app/api/leaderboardpost?username=John&score=100&songName=ExampleSong
     private const string ApiUrl = "https://snapsync-two.vercel.app/api/leaderboardpost?";
@@ -56,7 +62,6 @@ public class testGenerate : MonoBehaviour
 
         //StartCoroutine(AnimateLines());
         StartCoroutine(AnimatePrefabs());
-        //FetchAndDisplayMusic();
 
         countdownTimer = float.Parse(SongLength.text);
 
@@ -66,25 +71,24 @@ public class testGenerate : MonoBehaviour
     {
         countdownTimer -= Time.deltaTime;
 
-        if (countdownTimer <= 0f)
+        if (countdownTimer <= 0f && !scoreSent)
         {
-
             SendScoreToAPI();
+            scoreSent = true;            
+        }
+        if(countdownTimer <= -3f)
+        {
+            LeaderBoardStran.SetActive(true);
+            GameplayStran.SetActive(false);
         }
     }
 
-    void SendScoreToAPI()
+    async Task SendScoreToAPI()
     {
-        Debug.Log("Function executed!");
-    }
-
-
-    async Task FetchAndDisplayMusic()
-    {
-        string username = "neki";
         string score = Score.text;
         string Songname = SongName.text;
-        string YesApiUrl = ApiUrl + "username=" + username + "&score=" + score + "&songName=" + SongName.text;
+        string YesApiUrl = ApiUrl + "username=" + FirebaseBase.user.DisplayName + "&score=" + score + "&songName=" + SongName.text;
+
         try
         {
             using (HttpClient httpClient = new HttpClient())
@@ -93,7 +97,7 @@ public class testGenerate : MonoBehaviour
 
                 if (response.IsSuccessStatusCode)
                 {
-                    Debug.Log("Dela api");
+                    Debug.Log("Ga je poslal");
                 }
                 else
                 {
@@ -181,7 +185,7 @@ public class testGenerate : MonoBehaviour
 
         //Debug.Log(sizeofLine);
 
-        Vector3 spawnPosition = new Vector3((sizeofLine / 2), 700f, 0f);
+        Vector3 spawnPosition = new Vector3((sizeofLine / 2), -1250f, 0f);
 
         GameObject spawnedPrefab = Instantiate(linePrefab, spawnPosition, Quaternion.identity);
 
@@ -223,11 +227,10 @@ public class testGenerate : MonoBehaviour
         {
             float t = i / 5f;
             Vector3 position = Vector3.Lerp(linePositions[0], linePositions[1], t);
-            float sizePositon = linePositions[1].x / linePositions[0].x;
-            position.y = ((midiData[midiCount][i] * (canvasRect.sizeDelta.y / 2)) / 120);
+            position.y = ((midiData[midiCount][i] * ((canvasRect.sizeDelta.y / 2)) / 120)+200);
             GameObject spawnedPref = Instantiate(linePrefab, position, Quaternion.identity, canvasRect);
 
-            float scalingFactor = sizePositon / (duration * 2);
+            float scalingFactor = spawnedPref.GetComponent<Renderer>().bounds.size.x / duration;
             spawnedPref.transform.localScale = new Vector3(scalingFactor, 1f, 1f);
 
             spawnedPrefabs.Add(spawnedPref);

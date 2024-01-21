@@ -20,7 +20,7 @@ public class Firabese : MonoBehaviour
     public Toggle zapomni;
 
     Firebase.Auth.FirebaseAuth auth;
-    Firebase.Auth.FirebaseUser user;
+    public Firebase.Auth.FirebaseUser user;
 
     bool isSingIn = false;
 

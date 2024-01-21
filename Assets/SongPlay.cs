@@ -19,7 +19,7 @@ public class SongPlay : MonoBehaviour
     }
     private IEnumerator LoadSongCoroutine()
     {        
-        string trimSongName = SongName.text.Replace(" ", "");
+        string trimSongName = SongName.text.Replace(" ", "").Replace("'", ""); ;
         Debug.Log("Song playing: " + trimSongName);
 
         string url = string.Format("file://{0}", path + trimSongName + ".mp3");
